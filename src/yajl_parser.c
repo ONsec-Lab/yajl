@@ -378,7 +378,7 @@ yajl_do_parse(yajl_handle hand, const unsigned char * jsonText,
             /* only difference between these two states is that in
              * start '}' is valid, whereas in need_key, we've parsed
              * a comma, and a string key _must_ follow */
-            tok = yajl_lex_lex(hand->lexer, jsonText, jsonTextLen,
+            tok = yajl_lex_lex_js_key(hand->lexer, jsonText, jsonTextLen,
                                offset, &buf, &bufLen);
             switch (tok) {
                 case yajl_tok_eof:

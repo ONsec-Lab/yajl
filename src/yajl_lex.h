@@ -79,6 +79,10 @@ yajl_tok yajl_lex_lex(yajl_lexer lexer, const unsigned char * jsonText,
                       size_t jsonTextLen, size_t * offset,
                       const unsigned char ** outBuf, size_t * outLen);
 
+yajl_tok yajl_lex_lex_js_key(yajl_lexer lexer, const unsigned char * jsonText,
+                      size_t jsonTextLen, size_t * offset,
+                      const unsigned char ** outBuf, size_t * outLen);
+
 /** have a peek at the next token, but don't move the lexer forward */
 yajl_tok yajl_lex_peek(yajl_lexer lexer, const unsigned char * jsonText,
                        size_t jsonTextLen, size_t offset);
