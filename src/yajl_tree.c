@@ -501,3 +501,56 @@ void yajl_tree_free (yajl_val v)
         free(v);
     }
 }
+
+yajl_val yajl_tree_parse_raw_data (const char *input,size_t input_len,
+                          char *error_buffer, size_t error_buffer_size)
+{
+    static const yajl_callbacks callbacks =
+        {
+            /* null        = */ handle_null,
+            /* boolean     = */ handle_boolean,
+            /* integer     = */ NULL,
+            /* double      = */ NULL,
+            /* number      = */ handle_number,
+            /* string      = */ handle_string,
+            /* start map   = */ handle_start_map,
+            /* map key     = */ handle_string,
+            /* end map     = */ handle_end_map,
+            /* start array = */ handle_start_array,
+            /* end array   = */ handle_end_array
+        };
+
+    yajl_handle handle;
+    yajl_status status;
+    char * internal_err_str;
+	context_t ctx = { NULL, NULL, NULL, 0 };
+
+	ctx.errbuf = error_buffer;
+	ctx.errbuf_size = error_buffer_size;
+
+    if (error_buffer != NULL)
+        memset (error_buffer, 0, error_buffer_size);
+
+    handle = yajl_alloc (&callbacks, NULL, &ctx);
+    yajl_config(handle, yajl_allow_comments, 1);
+
+    status = yajl_parse(handle,
+                        (unsigned char *) input,
+                        input_len);
+    status = yajl_complete_parse (handle);
+    if (status != yajl_status_ok) {
+        if (error_buffer != NULL && error_buffer_size > 0) {
+               internal_err_str = (char *) yajl_get_error(handle, 1,
+                     (const unsigned char *) input,
+                     input_len);
+             snprintf(error_buffer, error_buffer_size, "%s", internal_err_str);
+             YA_FREE(&(handle->alloc), internal_err_str);
+        }
+        yajl_free (handle);
+        return NULL;
+    }
+
+    yajl_free (handle);
+    return (ctx.root);
+}
+

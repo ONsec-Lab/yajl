@@ -121,6 +121,10 @@ struct yajl_val_s
 YAJL_API yajl_val yajl_tree_parse (const char *input,
                                    char *error_buffer, size_t error_buffer_size);
 
+/* yajl_tree_parse version for string ended not null */
+YAJL_API  yajl_val yajl_tree_parse_raw_data (const char *input,size_t input_len,
+                          char *error_buffer, size_t error_buffer_size);
+
 /**
  * Free a parse tree returned by "yajl_tree_parse".
  *
