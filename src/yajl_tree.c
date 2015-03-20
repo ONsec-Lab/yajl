@@ -444,6 +444,16 @@ yajl_val yajl_tree_parse (const char *input,
              snprintf(error_buffer, error_buffer_size, "%s", internal_err_str);
              YA_FREE(&(handle->alloc), internal_err_str);
         }
+        stack_elem_t * se = ctx.stack;
+        if (se) {
+            do {
+               stack_elem_t * next = se->next;
+               free(se->key);
+               yajl_tree_free(se->value);
+               free(se);
+               se = next;
+            } while (se != NULL);
+        }
         yajl_free (handle);
         return NULL;
     }
@@ -545,6 +555,16 @@ yajl_val yajl_tree_parse_raw_data (const char *input,size_t input_len,
                      input_len);
              snprintf(error_buffer, error_buffer_size, "%s", internal_err_str);
              YA_FREE(&(handle->alloc), internal_err_str);
+        }
+        stack_elem_t * se = ctx.stack;
+        if (se) {
+            do {
+               stack_elem_t * next = se->next;
+               free(se->key);
+               yajl_tree_free(se->value);
+               free(se);
+               se = next;
+            } while (se != NULL);
         }
         yajl_free (handle);
         return NULL;
