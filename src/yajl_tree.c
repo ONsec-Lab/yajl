@@ -546,6 +546,7 @@ yajl_val yajl_tree_parse_raw_data (const char *input,size_t input_len,
 
     handle = yajl_alloc (&callbacks, NULL, &ctx);
     yajl_config(handle, yajl_allow_comments, 1);
+    yajl_config(handle, yajl_dont_validate_strings, 1);
 
     status = yajl_parse(handle,
                         (unsigned char *) input,
